@@ -1,17 +1,18 @@
 const Layout = () => import('@/components/Layout')
-const test = () => import('@/views/test')
-const home = () => import('@/views/home')
+const Test = () => import('@/views/test')
+const Home = () => import('@/views/home')
+const ErrorPage = () => import('@/views/error')
 
 export default [
   {
-    path: '/*',
+    path: '*',
     name: 'Layout',
     component: Layout,
     children: [
       {
         path: '/portal-home',
         name: 'home',
-        component: home,
+        component: Home,
         meta: {
           title: '首页',
         }
@@ -19,7 +20,7 @@ export default [
       {
         path: '/test',
         name: 'test',
-        component: test,
+        component: Test,
         meta: {
           title: 'test',
         }
@@ -33,4 +34,9 @@ export default [
       }
     ]
   },
+  {
+    path: '/error',
+    name: 'error',
+    component: ErrorPage,
+  }
 ]

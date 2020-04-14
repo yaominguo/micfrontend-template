@@ -1,13 +1,18 @@
 <template>
   <div id="root">
+    <Loader />
     <router-view/>
   </div>
 </template>
 
 <script>
+import Loader from '@/components/Layout/loader'
 import {mapMutations} from 'vuex'
 export default {
   name: 'App',
+  components: {
+    Loader,
+  },
   props: {
     content: String,
     loading: Boolean,

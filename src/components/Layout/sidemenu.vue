@@ -12,7 +12,7 @@
       <a-sub-menu v-for="menu in menus" :key="menu.key">
         <span slot="title"><a-icon :type="menu.icon" /><span>{{menu.title}}</span></span>
         <template v-if="menu.children && menu.children.length > 0">
-          <a-menu-item v-for="child in menu.children" :key="child.path">{{child.title}}</a-menu-item>
+          <a-menu-item v-for="child in menu.children" :key="child.key">{{child.title}}</a-menu-item>
         </template>
       </a-sub-menu>
     </template>
@@ -37,12 +37,16 @@ export default {
           title: '菜单1',
           children: [
             {
-              path: '/aaa',
+              key: 'aaa',
               title: '子菜单1'
             },
             {
-              path: '/test',
+              key: 'test',
               title: '子菜单2'
+            },
+            {
+              key: 'error',
+              title: '404'
             },
           ],
         },
@@ -60,10 +64,18 @@ export default {
     },
     onSelect({key}) {
       this.$router.push({
-        path: key,
+        name: key,
       })
     }
   },
+  watch: {
+    $route(cur) {
+      if (cur.name === 'home') {
+        this.openKeys = []
+        this.selectedKeys = []
+      }
+    }
+  }
 }
 </script>
 

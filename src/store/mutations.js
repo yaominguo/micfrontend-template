@@ -3,6 +3,6 @@ export default {
     state.content = data
   },
   setLoading(state, val) {
-    state.loading = val
+    state.showLoading = val
   }
 }

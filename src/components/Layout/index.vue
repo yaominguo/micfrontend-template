@@ -1,4 +1,5 @@
 <template>
+<a-locale-provider :locale="zh_CN">
   <a-layout id="layout">
     <a-layout-sider v-model="collapsed" :trigger="null" breakpoint="lg" collapsible>
       <div class="logo" />
@@ -32,10 +33,12 @@
       </a-layout-content>
     </a-layout>
   </a-layout>
+</a-locale-provider>
 </template>
 <script>
 import SideMenu from './sidemenu'
 import NavBar from './navbar'
+import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
 export default {
   name: 'Layout',
   components: {
@@ -49,13 +52,12 @@ export default {
   },
   data() {
     return {
+      zh_CN,
       collapsed: false,
     }
   },
   methods: {
     onUserSelect({key}) {
-      console.log(key);
-
       this.$router.push({
         path: key,
       })

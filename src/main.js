@@ -5,20 +5,32 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import router from './router'
+import jscookie from 'js-cookie'
+import ajax from '@/server/ajax'
+import api from '@/server/api'
 import {registerMicroApps, start} from 'qiankun'
-import {Layout, Menu, Icon, Breadcrumb, Dropdown, Badge} from 'ant-design-vue'
+import {LocaleProvider, Layout, Menu, Icon, Breadcrumb, Dropdown, Badge, Spin, Button} from 'ant-design-vue'
 
 Vue.config.productionTip = false
+Vue.prototype.$ajax = ajax
+Vue.prototype.$api = api
+Vue.prototype.$cookie = jscookie
+Vue.use(LocaleProvider)
 Vue.use(Layout)
 Vue.use(Menu)
 Vue.use(Icon)
 Vue.use(Breadcrumb)
 Vue.use(Dropdown)
 Vue.use(Badge)
+Vue.use(Spin)
+Vue.use(Button)
 
 /* eslint-disable no-new */
 let app = null
-function render({appContent, loading} = {}) {
+const checkPrefix = (prefix) => { // 检查路径前缀
+  return location => location.pathname.startsWith(prefix)
+}
+const render = ({appContent, loading} = {}) => { // 渲染方法
   if (!app) {
     app = new Vue({
       el: '#portal',
@@ -44,36 +56,17 @@ function render({appContent, loading} = {}) {
     app.loading = loading
   }
 }
-
-function genActiveRule(routerPrefix) {
-  return location => location.pathname.startsWith(routerPrefix)
-}
-
-render()
-
-registerMicroApps([
+const projects = [ // 子项目信息
   {
     name: 'aaa',
     entry: 'http://portal.tao.com/',
     render,
-    activeRule: genActiveRule('/aaa'),
+    activeRule: checkPrefix('/aaa'),
   },
-], {
-  beforeLoad: [
-    app => {
-      console.log('before load', app)
-    }
-  ], // 挂载前回调
-  beforeMount: [
-    app => {
-      console.log('before mount', app)
-    }
-  ], // 挂载后回调
-  afterUnmount: [
-    app => {
-      console.log('after unmount', app)
-    }
-  ] // 卸载后回调
-})
+]
+
+registerMicroApps(projects) // 注册子项目
+
+render()
 
 start()
