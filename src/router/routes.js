@@ -1,5 +1,6 @@
 const Layout = () => import('@/components/Layout')
-const test = () => import('@/test')
+const test = () => import('@/views/test')
+const home = () => import('@/views/home')
 
 export default [
   {
@@ -8,8 +9,9 @@ export default [
     component: Layout,
     children: [
       {
-        path: '/home',
+        path: '/portal-home',
         name: 'home',
+        component: home,
         meta: {
           title: '首页',
         }

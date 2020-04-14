@@ -46,21 +46,6 @@ export default {
             },
           ],
         },
-        {
-          key: 'sub2',
-          icon: 'mail',
-          title: '菜单2',
-          children: [
-            {
-              path: '/aaa',
-              title: '子菜单1'
-            },
-            {
-              path: '/test',
-              title: '子菜单2'
-            },
-          ],
-        },
       ]
     }
   },

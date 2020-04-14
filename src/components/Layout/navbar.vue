@@ -1,7 +1,7 @@
 <template>
   <a-breadcrumb :routes="routes">
     <template slot="itemRender" slot-scope="{route}">
-      <template v-if="$route.path.startsWith(route.path) || route.path == '/home'">
+      <template v-if="$route.path.startsWith(route.path) || route.path == '/portal-home'">
         <span v-if="routes.indexOf(route) === routes.length - 1">
           {{route.name}}
         </span>
@@ -18,7 +18,7 @@ export default {
   name: 'NavBar',
   computed: {
     routes() {
-      return [{path: '/home', name: 'Home'}, ...routes[0].children.slice(1)]
+      return [{path: '/portal-home', name: 'Home'}, ...routes[0].children.slice(1)]
     }
   }
 }

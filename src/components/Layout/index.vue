@@ -18,15 +18,15 @@
               <span class="name">用户名</span>
               <a-icon type="down" />
             </span>
-            <a-menu slot="overlay">
-              <a-menu-item key="person">账户信息</a-menu-item>
-              <a-menu-item key="logout">退出登录</a-menu-item>
+            <a-menu slot="overlay" @click="onUserSelect">
+              <a-menu-item key="/person">账户信息</a-menu-item>
+              <a-menu-item key="/logout">退出登录</a-menu-item>
             </a-menu>
           </a-dropdown>
         </div>
       </a-layout-header>
       <a-layout-content class="layout-content">
-        <!-- 子项目加载在此 -->
+        <!-- 子项目在此加载 -->
         <div v-if="content" id="contentView" v-html="content" />
         <router-view v-else></router-view>
       </a-layout-content>
@@ -50,6 +50,15 @@ export default {
   data() {
     return {
       collapsed: false,
+    }
+  },
+  methods: {
+    onUserSelect({key}) {
+      console.log(key);
+
+      this.$router.push({
+        path: key,
+      })
     }
   },
 }
