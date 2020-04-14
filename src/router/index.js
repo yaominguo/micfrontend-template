@@ -4,6 +4,15 @@ import routes from './routes'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
+  mode: 'history',
+  // base: process.env.NODE_ENV === 'development' ? '/' : '/portal/',
   routes,
 })
+
+router.beforeEach((to, from, next) => {
+  // TODO
+  next()
+})
+
+export default router

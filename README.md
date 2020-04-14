@@ -2,6 +2,18 @@
 
 > 微前端项目用模板
 
+## 子项目需要更改的地方
+1. 新建public-path文件，内容为：
+
+```javascript
+if (window.__POWERED_BY_QIANKUN__) {
+  // eslint-disable-next-line no-undef
+  __webpack_public_path__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__
+}
+```
+并在入口文件main.js中引入
+
+
 ## Build Setup
 
 ``` bash
