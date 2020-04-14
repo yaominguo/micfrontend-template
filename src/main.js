@@ -3,10 +3,18 @@
 import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
+import store from './store'
 import router from './router'
-import {registerMicroApps, setDefaultMountApp, start} from 'qiankun'
+import {registerMicroApps, start} from 'qiankun'
+import {Layout, Menu, Icon, Breadcrumb, Dropdown, Badge} from 'ant-design-vue'
 
 Vue.config.productionTip = false
+Vue.use(Layout)
+Vue.use(Menu)
+Vue.use(Icon)
+Vue.use(Breadcrumb)
+Vue.use(Dropdown)
+Vue.use(Badge)
 
 /* eslint-disable no-new */
 let app = null
@@ -14,6 +22,7 @@ function render({appContent, loading} = {}) {
   if (!app) {
     app = new Vue({
       el: '#portal',
+      store,
       router,
       data() {
         return {
@@ -62,11 +71,9 @@ registerMicroApps([
   ], // 挂载后回调
   afterUnmount: [
     app => {
-      console.log('after unload', app)
+      console.log('after unmount', app)
     }
   ] // 卸载后回调
 })
-
-setDefaultMountApp('/aaa')
 
 start()
