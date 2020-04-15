@@ -75,7 +75,8 @@ export default {
   },
   watch: {
     $route(cur) {
-      if (cur.name === 'home') {
+      const notInSideMenus = ['home', 'info']
+      if (notInSideMenus.indexOf(cur.name) >= 0) {
         this.openKeys = []
         this.selectedKeys = []
       }

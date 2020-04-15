@@ -101,6 +101,11 @@ export default {
       addRoutes(result)
     }, 3000)
   },
+  beforeDestroy() {
+    window.removeEventListener('beforeunload', () => {
+      sessionStorage.setItem('VuexStore', JSON.stringify(this.$store.state))
+    })
+  },
   watch: {
     content(cur) {
       this.setContent(cur)

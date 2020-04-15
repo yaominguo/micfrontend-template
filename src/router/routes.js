@@ -1,5 +1,5 @@
 const Layout = () => import('@/components/Layout')
-const Test = () => import('@/views/test')
+const Info = () => import('@/views/info')
 const Home = () => import('@/views/home')
 const ErrorPage = () => import('@/views/error')
 
@@ -18,29 +18,13 @@ export default [
         }
       },
       {
-        path: '/test',
-        name: 'test',
-        component: Test,
+        path: '/info',
+        name: 'info',
+        component: Info,
         meta: {
-          title: 'test',
+          title: '用户信息',
         }
       },
-      // {
-      //   path: '/aaa',
-      //   name: 'aaa',
-      //   meta: {
-      //     title: 'aaa',
-      //   },
-      //   children: [
-      //     {
-      //       path: '/aaa/register',
-      //       name: 'register',
-      //       meta: {
-      //         title: '注册'
-      //       }
-      //     }
-      //   ]
-      // },
     ]
   },
   {

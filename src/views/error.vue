@@ -3,7 +3,7 @@
     <h1>网络错误</h1>
     <div>
       <a-button @click="$router.back()">返回上一页</a-button>
-      <a-button type="primary" @click="$router.push({name: 'home'})">返回首页</a-button>
+      <a-button type="primary" @click="$router.replace({path: '/portal-home'})">返回首页</a-button>
     </div>
   </div>
 </template>

@@ -20,7 +20,7 @@
               <a-icon type="down" />
             </span>
             <a-menu slot="overlay" @click="onUserSelect">
-              <a-menu-item key="/person">账户信息</a-menu-item>
+              <a-menu-item key="/info">用户信息</a-menu-item>
               <a-menu-item key="/logout">退出登录</a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -31,7 +31,7 @@
         <div v-if="content" id="contentView" v-html="content" />
         <template v-else>
           <!-- 传统子项目在iframe中渲染 -->
-          <iframe v-if="webviewSrc" :src="webviewSrc" frameborder="0" style="width:100%;height:100%;"/>
+          <iframe v-if="webviewSrc" :src="webviewSrc" frameborder="0" style="width:100%;height:100%;overflow:hidden;"/>
           <!-- 本项目的子页面在此渲染 -->
           <router-view v-else></router-view>
         </template>
@@ -125,6 +125,10 @@ export default {
 }
 
 #layout .layout-content {
+  height: 100%;
   margin: 14px;
+  padding: 14px;
+  overflow-y: auto;
+  background: #fff;
 }
 </style>
