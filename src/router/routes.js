@@ -25,18 +25,32 @@ export default [
           title: 'test',
         }
       },
-      {
-        path: '/aaa',
-        name: 'aaa',
-        meta: {
-          title: 'aaa',
-        }
-      }
+      // {
+      //   path: '/aaa',
+      //   name: 'aaa',
+      //   meta: {
+      //     title: 'aaa',
+      //   },
+      //   children: [
+      //     {
+      //       path: '/aaa/register',
+      //       name: 'register',
+      //       meta: {
+      //         title: '注册'
+      //       }
+      //     }
+      //   ]
+      // },
     ]
   },
   {
     path: '/error',
     name: 'error',
     component: ErrorPage,
-  }
+  },
+  {
+    path: '/logout',
+    name: 'logout',
+    component: ErrorPage,
+  },
 ]

@@ -12,6 +12,9 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   // TODO
+  if (to.path === '/' && to.name !== 'home') {
+    next('/portal-home')
+  }
   next()
 })
 

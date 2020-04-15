@@ -4,5 +4,8 @@ export default {
   },
   setLoading(state, val) {
     state.showLoading = val
+  },
+  setRoutes(state, data) {
+    state.routes = data
   }
 }

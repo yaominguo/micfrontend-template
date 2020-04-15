@@ -26,33 +26,38 @@ export default {
     return {
       openKeys: [],
       selectedKeys: [],
+      menus: [],
     }
   },
-  computed: {
-    menus() {
-      return [
-        {
-          key: 'sub1',
-          icon: 'mail',
-          title: '菜单1',
-          children: [
-            {
-              key: 'aaa',
-              title: '子菜单1'
-            },
-            {
-              key: 'test',
-              title: '子菜单2'
-            },
-            {
-              key: 'error',
-              title: '404'
-            },
-          ],
-        },
-      ]
-    }
-  },
+  // computed: {
+  //   menus() {
+  //     return [
+  //       {
+  //         key: 'sub1',
+  //         icon: 'mail',
+  //         title: '菜单1',
+  //         children: [
+  //           {
+  //             key: 'aaa',
+  //             title: '子菜单1'
+  //           },
+  //           {
+  //             key: 'register',
+  //             title: '注册'
+  //           },
+  //           {
+  //             key: 'test',
+  //             title: '子菜单2'
+  //           },
+  //           {
+  //             key: 'error',
+  //             title: '404'
+  //           },
+  //         ],
+  //       },
+  //     ]
+  //   }
+  // },
   methods: {
     // 点击菜单，收起其他展开的菜单
     onOpenChange(keys) {
@@ -74,6 +79,26 @@ export default {
         this.openKeys = []
         this.selectedKeys = []
       }
+    },
+    '$store.state.routes': { // 根据动态获取的路由生成菜单
+      handler(cur) {
+        this.menus = cur.map(route => {
+          if (route.children && route.children.length > 0) {
+            return {
+              key: route.name,
+              icon: 'mail',
+              title: route.meta.title,
+              children: route.children.map(child => {
+                return {
+                  key: child.name,
+                  title: child.meta.title,
+                }
+              })
+            }
+          }
+        })
+      },
+      immediate: true,
     }
   }
 }
