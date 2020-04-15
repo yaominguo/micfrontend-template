@@ -34,11 +34,15 @@ export default {
       sessionStorage.setItem('VuexStore', JSON.stringify(this.$store.state))
     })
 
-    if(this.$store.state.routes.length > 0) {
+    const addRoutes = (data) => {
       const {routes} = this.$router.options
       const parent = routes.find(item => item.name === 'Layout')
-      parent.children.push(...this.$store.state.routes)
+      parent.children.push(...data)
       this.$router.addRoutes([parent])
+    }
+
+    if(this.$store.state.routes.length > 0) {
+      addRoutes(this.$store.state.routes)
       return
     }
 
@@ -75,16 +79,27 @@ export default {
             },
           ]
         },
+        {
+          path: '/webview',
+          name: 'webview',
+          meta: {
+            title: '传统项目',
+          },
+          children: [
+            {
+              path: '/webview/html',
+              name: 'html',
+              meta: {
+                title: 'html页面',
+                src: 'http://localhost:7770'
+              }
+            },
+          ]
+        },
       ]
       this.$store.commit('setRoutes', result)
-      const {routes} = this.$router.options
-      const parent = routes.find(item => item.name === 'Layout')
-      parent.children.push(...result)
-      this.$router.addRoutes([parent])
+      addRoutes(result)
     }, 3000)
-  },
-  beforeDestroy() {
-    window.removeEventListener('beforeunload')
   },
   watch: {
     content(cur) {

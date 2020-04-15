@@ -7,5 +7,8 @@ export default {
   },
   setRoutes(state, data) {
     state.routes = data
+  },
+  setWebviewSrc(state, src) {
+    state.webviewSrc = src
   }
 }

@@ -29,13 +29,19 @@
       <a-layout-content class="layout-content">
         <!-- 子项目在此加载 -->
         <div v-if="content" id="contentView" v-html="content" />
-        <router-view v-else></router-view>
+        <template v-else>
+          <!-- 传统子项目在iframe中渲染 -->
+          <iframe v-if="webviewSrc" :src="webviewSrc" frameborder="0" style="width:100%;height:100%;"/>
+          <!-- 本项目的子页面在此渲染 -->
+          <router-view v-else></router-view>
+        </template>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </a-locale-provider>
 </template>
 <script>
+import {mapState} from 'vuex'
 import SideMenu from './sidemenu'
 import NavBar from './navbar'
 import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
@@ -46,9 +52,10 @@ export default {
     NavBar,
   },
   computed: {
-    content() {
-      return this.$store.state.content
-    }
+    ...mapState([
+      'content',
+      'webviewSrc',
+    ])
   },
   data() {
     return {
