@@ -29,35 +29,6 @@ export default {
       menus: [],
     }
   },
-  // computed: {
-  //   menus() {
-  //     return [
-  //       {
-  //         key: 'sub1',
-  //         icon: 'mail',
-  //         title: '菜单1',
-  //         children: [
-  //           {
-  //             key: 'aaa',
-  //             title: '子菜单1'
-  //           },
-  //           {
-  //             key: 'register',
-  //             title: '注册'
-  //           },
-  //           {
-  //             key: 'test',
-  //             title: '子菜单2'
-  //           },
-  //           {
-  //             key: 'error',
-  //             title: '404'
-  //           },
-  //         ],
-  //       },
-  //     ]
-  //   }
-  // },
   methods: {
     // 点击菜单，收起其他展开的菜单
     onOpenChange(keys) {
@@ -65,6 +36,14 @@ export default {
         this.openKeys = keys.slice(1)
       } else {
         this.openKeys = keys
+      }
+    },
+    // 更新打开及选中的菜单
+    updateOpenKey(name) {
+      if (name === 'home') this.openKeys = []
+      else {
+        this.openKeys = this.$route.matched.map(item => item.name).filter(item => item !== name)
+        this.selectedKeys = [name]
       }
     },
     onSelect({key}) {
@@ -87,7 +66,7 @@ export default {
           if (route.children && route.children.length > 0) {
             return {
               key: route.name,
-              icon: 'mail',
+              icon: route.meta.icon || 'folder',
               title: route.meta.title,
               children: route.children.map(child => {
                 return {

@@ -9,7 +9,7 @@ import jscookie from 'js-cookie'
 import ajax from '@/server/ajax'
 import api from '@/server/api'
 import {registerMicroApps, start} from 'qiankun'
-import {LocaleProvider, Layout, Menu, Icon, Breadcrumb, Dropdown, Badge, Spin, Button} from 'ant-design-vue'
+import {LocaleProvider, Layout, Menu, Icon, Breadcrumb, Dropdown, Badge, Spin, Button, Tag} from 'ant-design-vue'
 
 Vue.config.productionTip = false
 Vue.prototype.$ajax = ajax
@@ -24,6 +24,7 @@ Vue.use(Dropdown)
 Vue.use(Badge)
 Vue.use(Spin)
 Vue.use(Button)
+Vue.use(Tag)
 
 /* eslint-disable no-new */
 let app = null
@@ -59,7 +60,7 @@ const render = ({appContent, loading} = {}) => { // 渲染方法
 const projects = [ // 子项目信息
   {
     name: 'aaa',
-    entry: 'http://portal.tao.com/',
+    entry: 'http://portal.tao.com',
     render,
     activeRule: checkPrefix('/aaa'),
   },

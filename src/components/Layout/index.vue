@@ -3,13 +3,13 @@
   <a-layout id="layout">
     <a-layout-sider v-model="collapsed" :trigger="null" breakpoint="lg" collapsible>
       <div class="logo" />
-      <SideMenu />
+      <SideMenu ref="sideMenu"/>
     </a-layout-sider>
     <a-layout>
       <a-layout-header class="layout-head">
         <div>
           <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="collapsed = !collapsed" />
-          <NavBar />
+          <BreadCrumb />
         </div>
         <div>
           <a-badge :count="0" showZero><a><a-icon type="bell" /></a></a-badge>
@@ -26,14 +26,17 @@
           </a-dropdown>
         </div>
       </a-layout-header>
+      <div class="tag-nav-wrapper">
+        <TagsNav :value="$route" @input="turnToPage" :list="tagNavList" @on-close="handleCloseTag"/>
+      </div>
       <a-layout-content class="layout-content">
         <!-- 子项目在此加载 -->
         <div v-if="content" id="contentView" v-html="content" />
         <template v-else>
           <!-- 传统子项目在iframe中渲染 -->
-          <iframe v-if="webviewSrc" :src="webviewSrc" frameborder="0" style="width:100%;height:100%;overflow:hidden;"/>
+          <iframe v-if="webviewSrc" :src="webviewSrc" frameborder="0" style="width:100%;height:96%;overflow:hidden;" />
           <!-- 本项目的子页面在此渲染 -->
-          <router-view v-else></router-view>
+          <router-view v-else />
         </template>
       </a-layout-content>
     </a-layout>
@@ -41,20 +44,25 @@
 </a-locale-provider>
 </template>
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapMutations} from 'vuex'
 import SideMenu from './sidemenu'
-import NavBar from './navbar'
+import TagsNav from './tags-nav'
+import BreadCrumb from './bread-crumb'
 import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
+import {routeEqual, getNextRoute, getNewTagList} from '@/libs/util'
 export default {
   name: 'Layout',
   components: {
     SideMenu,
-    NavBar,
+    TagsNav,
+    BreadCrumb,
   },
   computed: {
     ...mapState([
       'content',
       'webviewSrc',
+      'tagNavList',
+      'homeRoute',
     ])
   },
   data() {
@@ -63,11 +71,56 @@ export default {
       collapsed: false,
     }
   },
+  mounted() {
+    this.setTagNavList()
+    this.addTag({
+      route: this.homeRoute
+    })
+    this.setBreadCrumb(this.$route)
+  },
   methods: {
     onUserSelect({key}) {
       this.$router.push({
         path: key,
       })
+    },
+    turnToPage(route) {
+      if (typeof route === 'string') {
+        this.$router.push({name: route})
+      } else {
+        const {name, params, query} = route
+        this.$router.push({
+          name,
+          params,
+          query,
+        })
+      }
+    },
+    handleCloseTag(res, type, route) {
+      if (routeEqual(this.$route, route)) {
+        const nextRoute = getNextRoute(this.tagNavList, route)
+        this.$router.push(nextRoute)
+      }
+      this.setTagNavList(res)
+    },
+    ...mapMutations([
+      'addTag',
+      'setTagNavList',
+      'setBreadCrumb',
+    ]),
+  },
+  watch: {
+    '$route': {
+      handler(newRoute) {
+        const {name, query, params, meta} = newRoute
+        this.addTag({
+          route: {name, query, params, meta},
+          type: 'push',
+        })
+        this.setBreadCrumb(newRoute)
+        this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
+        this.$refs.sideMenu.updateOpenKey(newRoute.name)
+      }
     }
   },
 }
@@ -130,5 +183,10 @@ export default {
   padding: 14px;
   overflow-y: auto;
   background: #fff;
+}
+
+.tag-nav-wrapper {
+  padding: 10px 0 0;
+  height: 40px;
 }
 </style>
