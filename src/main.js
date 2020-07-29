@@ -25,7 +25,6 @@ Vue.use(Badge)
 Vue.use(Spin)
 Vue.use(Button)
 Vue.use(Tag)
-
 /* eslint-disable no-new */
 let app = null
 const checkPrefix = (prefix) => { // 检查路径前缀
@@ -60,9 +59,15 @@ const render = ({appContent, loading} = {}) => { // 渲染方法
 const projects = [ // 子项目信息
   {
     name: 'aaa',
-    entry: 'http://portal.tao.com',
+    entry: 'http://localhost:7771',
     render,
     activeRule: checkPrefix('/aaa'),
+  },
+  {
+    name: 'bbb',
+    entry: 'http://localhost:7772',
+    render,
+    activeRule: checkPrefix('/bbb'),
   },
 ]
 
@@ -70,4 +75,4 @@ registerMicroApps(projects) // 注册子项目
 
 render()
 
-start()
+start({singular: false})

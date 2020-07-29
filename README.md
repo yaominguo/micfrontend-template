@@ -2,6 +2,9 @@
 
 ## 微前端项目用模板
 
+<i> 记得主项目需将/config/index.js中的build.assetsPublicPath修改为主项目的生产环境地址。</i>
+
+
 > ## 子项目接入须知
 
 ### 1. 建立子项目唯一标识，下面都将以‘child’为例

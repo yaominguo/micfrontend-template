@@ -97,6 +97,7 @@ export default {
     height: 26px;
     line-height: 26px;
     border-radius: 2px;
+    user-select: none;
   }
 </style>
 <style scoped>

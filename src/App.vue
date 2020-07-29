@@ -1,7 +1,7 @@
 <template>
   <div id="root">
     <Loader />
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -17,21 +17,15 @@ export default {
     content: String,
     loading: Boolean,
   },
-  methods: {
-    ...mapMutations([
-      'setContent',
-      'setLoading',
-    ])
-  },
   mounted() {
     /** 持久化存储vuex 使其页面刷新后数据不丢失 */
     //在页面加载时读取sessionStorage里的状态信息
     // if (sessionStorage.getItem('VuexStore')) {
-    //   this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(sessionStorage.getItem('VuexStore'))))
+    //     this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(sessionStorage.getItem('VuexStore'))))
     // }
     // //在页面刷新时将vuex里的信息保存到sessionStorage里
     // window.addEventListener('beforeunload', () => {
-    //   sessionStorage.setItem('VuexStore', JSON.stringify(this.$store.state))
+    //     sessionStorage.setItem('VuexStore', JSON.stringify(this.$store.state))
     // })
     this.getRouteMenu()
   },
@@ -41,6 +35,10 @@ export default {
     })
   },
   methods: {
+    ...mapMutations([
+      'setContent',
+      'setLoading',
+    ]),
     getRouteMenu() {
       const addRoutes = (data) => {
         const {routes} = this.$router.options
@@ -58,28 +56,28 @@ export default {
       setTimeout(() => {
         const res = [
           {
-            path: '/pudong',
-            name: 'pudong',
+            path: '/aaa',
+            name: 'aaa',
             meta: {
-              title: 'A菜单',
+              title: 'aaa项目',
             },
             children: [
               {
-                path: '/pudong/caidan1',
-                name: 'login',
+                path: '/aaa/login',
+                name: 'aaa-login',
                 meta: {
                   title: '登录'
                 }
               },
               {
-                path: '/pudong/caidan2',
-                name: 'register',
+                path: '/aaa/register',
+                name: 'aaa-register',
                 meta: {
                   title: '注册'
                 }
               },
               {
-                path: '/pudong/home',
+                path: '/aaa/home',
                 name: 'aaa-home',
                 meta: {
                   title: '页面'
@@ -88,35 +86,31 @@ export default {
             ]
           },
           {
-            path: '/ecologicalFishery',
-            name: 'dyzh',
+            path: '/bbb',
+            name: 'bbb',
             meta: {
-              title: 'dyzh',
+              title: 'bbb项目',
             },
             children: [
               {
-                path: '/ecologicalFishery/BasicInfor',
-                name: 'BasicInfor',
+                path: '/bbb/login',
+                name: 'bbb-login',
                 meta: {
-                  title: '基本信息'
+                  title: '登录'
                 }
               },
-            ]
-          },
-          {
-            path: '/webview',
-            name: 'webview',
-            meta: {
-              title: '传统项目',
-            },
-            children: [
               {
-                path: '/webview/html',
-                name: 'html',
+                path: '/bbb/register',
+                name: 'bbb-register',
                 meta: {
-                  title: 'html页面',
-                  src: 'http://localhost:7770'
-                  // src: 'http://962121.fgj.sh.gov.cn/wyweb/mngplat/cspinfodeclare/query/cspinfodeclarequery/index.do',
+                  title: '注册'
+                }
+              },
+              {
+                path: '/bbb/home',
+                name: 'bbb-home',
+                meta: {
+                  title: '页面'
                 }
               },
             ]
