@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import {homeName, isInRoutes} from '@/libs/util.js'
 export default {
   name: 'SideMenu',
   data() {
@@ -40,22 +41,39 @@ export default {
     },
     // 更新打开及选中的菜单
     updateOpenKey(name) {
-      if (name === 'home') this.openKeys = []
-      else {
+      if (name === homeName) this.openKeys = []
+      else if (!isInRoutes(this.$route.path)) {
+        const result = this.$store.state.tagNavList.find(tag => tag._jump && tag._jump.startsWith(this.$route.path))
+        this.openKeys = result._matched.map(item => item.name).filter(item => item !== name)
+        this.selectedKeys = [result.name]
+      } else {
         this.openKeys = this.$route.matched.map(item => item.name).filter(item => item !== name)
         this.selectedKeys = [name]
       }
     },
     onSelect({key}) {
+      const result = this.$store.state.tagNavList.find(tag => tag.name === key)
+      if (result && result._jump) {
+        this.$router.push({
+          path: result._jump,
+        })
+        return
+      }
       this.$router.push({
         name: key,
       })
     }
   },
+  computed: {
+    notInSideMenus() { // 不需要在侧边栏展示的路由
+      const {routes} = this.$router.options
+      const parent = routes.find(item => item.name === 'Layout')
+      return parent.children.filter(route => !route.children).map(item => item.name)
+    },
+  },
   watch: {
     $route(cur) {
-      const notInSideMenus = ['home', 'info']
-      if (notInSideMenus.indexOf(cur.name) >= 0) {
+      if (this.notInSideMenus.indexOf(cur.name) >= 0) {
         this.openKeys = []
         this.selectedKeys = []
       }

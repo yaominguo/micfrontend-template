@@ -1,6 +1,14 @@
+import store from '@/store/index'
+import router from '@/router/index'
+
+/** home页的路由名称，根据需要自行设置 */
 export const homeName = 'home'
 
-export const getRouteTitleHandled = route => {
+/**
+ * @description 从路由中拿取名称
+ * @param {*} route
+ */
+export const getRouteTitleHandler = route => {
   const router = {...route}
   const meta = {...route.meta}
   let {title} = meta
@@ -27,7 +35,7 @@ export const objEqual = (obj1, obj2) => {
 }
 
 /**
- *
+ * @description 重复执行函数
  * @param {Number} times 回调函数需要执行的次数
  * @param {Function} cb 回调函数
  */
@@ -44,6 +52,9 @@ export const doCustomTimes = (times, cb) => {
  * @param {*} route2
  */
 export const routeEqual = (route1, route2) => {
+  if(!isInRoutes(route1.path)) { // 多余的逻辑，为了判断微前端子项目私有页面添加
+    return route2._jump && route2._jump.startsWith(route1.path)
+  }
   const params1 = route1.params || {}
   const params2 = route2.params || {}
   const query1 = route1.query || {}
@@ -51,7 +62,11 @@ export const routeEqual = (route1, route2) => {
   return (route1.name === route2.name) && objEqual(params1, params2) && objEqual(query1, query2)
 }
 
-// 判断打开的标签列表里是否已存在该路由对象
+/**
+ * @description 判断打开的标签列表里是否已存在该路由对象
+ * @param {Array} tagNavList
+ * @param {*} routeItem
+ */
 export const routeHasExist = (tagNavList, routeItem) => {
   const len = tagNavList.length
   let res = false
@@ -75,11 +90,11 @@ export const getNewTagList = (list, newRoute) => {
 }
 
 /**
- * @description 用于查找路由列表中name为home的对象
+ * @description 用于查找路由列表中的home路由对象
  * @param {*} routers
  * @param {*} home
  */
-export const getHomeRoute = (routers, home = 'home') => {
+export const getHomeRoute = (routers, home = homeName) => {
   let i = -1
   const len = routers.length
   let homeRoute = {}
@@ -96,6 +111,7 @@ export const getHomeRoute = (routers, home = 'home') => {
 }
 
 /**
+ * @description 获取相邻的标签路由
  * @param {*} list 当行标签列表
  * @param {*} route 当前关闭的标签
  */
@@ -111,9 +127,18 @@ export const getNextRoute =(list, route) => {
   return res
 }
 
+/**
+ * @description 转化面包屑菜单
+ * @param {*} route 当前路由
+ * @param {*} homeRoute
+ */
 export const getBreadCrumbList = (route, homeRoute) => {
   const homeItem = {...homeRoute}
-  const routeMatched = route.matched
+  let routeMatched = route.matched
+  if (!isInRoutes(route.path)) { // 多余的逻辑，为了微前端子项目私有页面添加
+    const result = store.state.tagNavList.find(tag => tag._jump && tag._jump.startsWith(route.path))
+    routeMatched = result._matched
+  }
   if (routeMatched.some(item => item.name === homeRoute.name)) return [homeItem]
   let res = routeMatched.filter(item => item.parent !== undefined).map(item => {
     const meta = {...item.meta}
@@ -134,4 +159,60 @@ export const setTagNavListInLocalstorage = list => {
 export const getTagNavListFromLocalstorage = () => {
   const list = localStorage.tagNavList
   return list ? JSON.parse(list) : []
+}
+
+/**
+ * @description 判断路径是否在路由列表中
+ * @param {String} path 路径
+ */
+export const isInRoutes = (path) => {
+  const {routes} = router.options
+  const parentRoute = routes.find(item => item.name === 'Layout')
+  let result = false
+  const filter = (list) => {
+    for (let i = 0, len = list.length; i < len; i++) {
+      const route = list[i]
+      if (route.path === path) {
+        result = true
+        break
+      } else {
+        const {children} = route
+        if (children && children.length > 0) {
+          return filter(children)
+        } else {
+          continue
+        }
+      }
+    }
+  }
+  filter(parentRoute.children)
+  return result
+}
+
+/**
+ * @description 当离开时判断路由和window.location是否发生变化
+ * @param {*} route
+ * @param {*} window.location
+ */
+export const checkRouteChange = (route, {pathname, search}) => {
+  const newLocation = pathname + search
+  if (!newLocation.startsWith(route.path)) {
+    const tagList = [...store.state.tagNavList]
+    if (isInRoutes(pathname)) { // 如果变化后的路径在路由列表中已有定义，则不需要_jump和_matched
+      tagList.forEach(tag => {
+        if (tag.path === pathname) {
+          delete tag._jump
+          delete tag._matched
+        }
+      })
+    } else { // 否则则设置重定向跳转链接_jump及面包屑需要用到的_matched路由匹配列表
+      tagList.forEach(tag => {
+        if (tag.name === route.name) {
+          tag._jump = newLocation
+          tag._matched = route.matched.filter(item => item.parent !== undefined).map(item => ({name: item.name, meta: item.meta, parent: true}))
+        }
+      })
+    }
+    store.commit('setTagNavList', tagList)
+  }
 }

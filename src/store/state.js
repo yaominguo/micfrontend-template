@@ -1,7 +1,6 @@
-import {getHomeRoute} from '@/libs/util'
+import {homeName, getHomeRoute} from '@/libs/util'
 import routers from '@/router/routes'
 
-const homeName = 'home'
 export default {
   homeRoute: getHomeRoute(routers, homeName),
   content: null,

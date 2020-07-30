@@ -1,5 +1,5 @@
 import {
-  getRouteTitleHandled,
+  getRouteTitleHandler,
   routeHasExist,
   setTagNavListInLocalstorage,
   getTagNavListFromLocalstorage,
@@ -20,8 +20,8 @@ export default {
   setWebviewSrc(state, src) {
     state.webviewSrc = src
   },
-  addTag(state, {route, type='unshift'}) {
-    const router = getRouteTitleHandled(route)
+  addTag(state, {route, type = 'unshift'}) {
+    const router = getRouteTitleHandler(route)
     if (routeHasExist(state.tagNavList, router)) return
     if (type === 'push') state.tagNavList.push(router)
     else {

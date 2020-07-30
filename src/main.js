@@ -8,13 +8,14 @@ import router from './router'
 import jscookie from 'js-cookie'
 import ajax from '@/server/ajax'
 import api from '@/server/api'
-import {registerMicroApps, start} from 'qiankun'
+import {registerMicroApps, start, initGlobalState} from 'qiankun'
 import {LocaleProvider, Layout, Menu, Icon, Breadcrumb, Dropdown, Badge, Spin, Button, Tag} from 'ant-design-vue'
 
 Vue.config.productionTip = false
 Vue.prototype.$ajax = ajax
 Vue.prototype.$api = api
 Vue.prototype.$cookie = jscookie
+Vue.prototype.$global_state = initGlobalState({destroy: false}) // 初始化是否销毁子项目keep-alive标签
 Vue.use(LocaleProvider)
 Vue.use(Layout)
 Vue.use(Menu)
@@ -27,9 +28,6 @@ Vue.use(Button)
 Vue.use(Tag)
 /* eslint-disable no-new */
 let app = null
-const checkPrefix = (prefix) => { // 检查路径前缀
-  return location => location.pathname.startsWith(prefix)
-}
 const render = ({appContent, loading} = {}) => { // 渲染方法
   if (!app) {
     app = new Vue({
@@ -61,13 +59,13 @@ const projects = [ // 子项目信息
     name: 'aaa',
     entry: 'http://localhost:7771',
     render,
-    activeRule: checkPrefix('/aaa'),
+    activeRule: '/aaa',
   },
   {
     name: 'bbb',
     entry: 'http://localhost:7772',
     render,
-    activeRule: checkPrefix('/bbb'),
+    activeRule: '/bbb',
   },
 ]
 

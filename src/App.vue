@@ -18,7 +18,7 @@ export default {
     loading: Boolean,
   },
   mounted() {
-    /** 持久化存储vuex 使其页面刷新后数据不丢失 */
+    /** 持久化存储vuex 使其页面刷新后数据不丢失 （根据需求放开注释）*/
     //在页面加载时读取sessionStorage里的状态信息
     // if (sessionStorage.getItem('VuexStore')) {
     //     this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(sessionStorage.getItem('VuexStore'))))
@@ -27,7 +27,7 @@ export default {
     // window.addEventListener('beforeunload', () => {
     //     sessionStorage.setItem('VuexStore', JSON.stringify(this.$store.state))
     // })
-    this.getRouteMenu()
+    this.getRouteMenu() //模拟异步获取路由列表形成侧边栏菜单
   },
   beforeDestroy() {
     window.removeEventListener('beforeunload', () => {
@@ -70,17 +70,10 @@ export default {
                 }
               },
               {
-                path: '/aaa/register',
-                name: 'aaa-register',
+                path: '/aaa/table',
+                name: 'aaa-table',
                 meta: {
-                  title: '注册'
-                }
-              },
-              {
-                path: '/aaa/home',
-                name: 'aaa-home',
-                meta: {
-                  title: '页面'
+                  title: '列表页'
                 }
               },
             ]

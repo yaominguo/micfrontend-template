@@ -43,8 +43,8 @@ export default {
   },
   computed: {
     currentRouteObj() {
-      const {name, params, query} = this.value
-      return {name, params, query}
+      const {name, params, query, path} = this.value
+      return {name, params, query, path}
     },
   },
   methods: {
@@ -79,7 +79,7 @@ export default {
     },
     handleClick(item) {
       if (this.isCurrentTag(item)) return
-      this.$emit('input', item)
+      this.$emit('select', item)
     },
     isCurrentTag(item) {
       return routeEqual(this.currentRouteObj, item)
