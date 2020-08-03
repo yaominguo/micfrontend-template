@@ -1,21 +1,16 @@
 <template>
   <div id="root">
-    <Loader />
+    <Loader :value="$store.state.showLoading"/>
     <router-view />
   </div>
 </template>
 
 <script>
 import Loader from '@/components/Layout/loader'
-import {mapMutations} from 'vuex'
 export default {
   name: 'App',
   components: {
     Loader,
-  },
-  props: {
-    content: String,
-    loading: Boolean,
   },
   mounted() {
     /** 持久化存储vuex 使其页面刷新后数据不丢失 （根据需求放开注释）*/
@@ -35,10 +30,6 @@ export default {
     })
   },
   methods: {
-    ...mapMutations([
-      'setContent',
-      'setLoading',
-    ]),
     getRouteMenu() {
       const addRoutes = (data) => {
         const {routes} = this.$router.options
@@ -114,14 +105,6 @@ export default {
       }, 3000)
     }
   },
-  watch: {
-    content(cur) {
-      this.setContent(cur)
-    },
-    loading(cur) {
-      this.setLoading(cur)
-    }
-  }
 }
 </script>
 

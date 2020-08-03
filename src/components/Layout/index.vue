@@ -31,8 +31,8 @@
       </div>
       <a-layout-content class="layout-content">
         <!-- 子项目在此加载 -->
-        <div v-if="content" id="contentView" v-html="content" />
-        <template v-else>
+        <div v-show="contentIsReady" id="contentView"/>
+        <template v-show="!contentIsReady">
           <!-- 传统子项目在iframe中渲染 -->
           <iframe v-if="webviewSrc" :src="webviewSrc" frameborder="0" style="width:100%;height:96%;overflow:hidden;" />
           <!-- 本项目的子页面在此渲染 -->
@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'content',
+      'contentIsReady',
       'webviewSrc',
       'tagNavList',
       'homeRoute',
@@ -69,6 +69,7 @@ export default {
     return {
       zh_CN,
       collapsed: false,
+      curRoute: null,
     }
   },
   mounted() {
@@ -77,14 +78,16 @@ export default {
       route: this.homeRoute
     })
     this.setBreadCrumb(this.$route)
+    this.$global_state.onGlobalStateChange(state => {
+      const {route} = state
+      if (route && !route.destroy) {
+        this.curRoute = state.route
+      }
+    }, true)
     window.addEventListener('beforeunload', () => checkRouteChange(this.$route, window.location)) // 刷新页面时候检查路由和真实地址是否有变化
   },
   beforeDestroy() {
     window.removeEventListener('beforeunload', () => checkRouteChange(this.$route, window.location))
-  },
-  beforeRouteLeave (to, from, next) { // 页面跳转时候检查路由和真实地址是否有变化
-    checkRouteChange(from, window.location)
-    next()
   },
   methods: {
     ...mapMutations([
@@ -112,8 +115,8 @@ export default {
       }
     },
     handleCloseTag(res, type, route) { // 关闭标签
-      this.$global_state.setGlobalState({destroy: true}) // 关闭标签则设置子项目unmount时销毁keep-alive状态
-      setTimeout(() => this.$global_state.setGlobalState({destroy: false}), 2000)
+      this.$global_state.setGlobalState({destroy: true, route}) // 关闭标签则设置子项目unmount时销毁keep-alive状态
+      // setTimeout(() => this.$global_state.setGlobalState({destroy: false}), 1000)
       /**
        * 关闭触发中的标签页面则推回首页标签
        * (原本的逻辑是关闭触发中的标签页面则触发相邻的标签页面，但是这样触发不了子项目的unmount)

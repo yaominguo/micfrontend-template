@@ -10,7 +10,7 @@
             :name="item.name"
             :data-route-item="item"
             @close.stop="handleClose(item)"
-            @click.native="handleClick(item)"
+            @click.native.stop="handleClick(item)"
             :closable="item.name !== 'home'"
             :color="isCurrentTag(item) ? 'blue' : null"
           >
@@ -74,6 +74,8 @@ export default {
       }
     },
     handleClose(route) {
+      // const event = new Event('click')
+      // document.querySelector(`.tags-nav .ant-tag[name=${route.name}]`).dispatchEvent(event)
       const res = this.list.filter(item => !routeEqual(route, item))
       this.$emit('on-close', res, undefined, route)
     },

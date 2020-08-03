@@ -1,6 +1,6 @@
 <template>
-  <div class="loader" v-show="loading">
-    <a-spin :tip="msg" :spinning="loading" size="large"/>
+  <div class="loader" v-show="value">
+    <a-spin :tip="msg" :spinning="value" size="large"/>
   </div>
 </template>
 
@@ -11,11 +11,10 @@ export default {
     msg: {
       type: String,
       default: '加载中...',
-    }
-  },
-  computed: {
-    loading() {
-      return this.$store.state.showLoading
+    },
+    value: {
+      type: Boolean,
+      default: false,
     }
   },
 }

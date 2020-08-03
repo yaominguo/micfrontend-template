@@ -8,8 +8,8 @@ import {
 
 const homeName = 'home'
 export default {
-  setContent(state, data) {
-    state.content = data
+  setLoadContainer(state, value) {
+    state.contentIsReady = value
   },
   setLoading(state, val) {
     state.showLoading = val

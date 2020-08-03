@@ -3,7 +3,7 @@ import routers from '@/router/routes'
 
 export default {
   homeRoute: getHomeRoute(routers, homeName),
-  content: null,
+  contentIsReady: false,
   showLoading: false,
   routes: [],
   webviewSrc: null,

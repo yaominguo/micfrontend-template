@@ -15,7 +15,7 @@ Vue.config.productionTip = false
 Vue.prototype.$ajax = ajax
 Vue.prototype.$api = api
 Vue.prototype.$cookie = jscookie
-Vue.prototype.$global_state = initGlobalState({destroy: false}) // 初始化是否销毁子项目keep-alive标签
+Vue.prototype.$global_state = initGlobalState({destroy: false, route: null}) // 初始化是否销毁子项目keep-alive标签
 Vue.use(LocaleProvider)
 Vue.use(Layout)
 Vue.use(Menu)
@@ -27,50 +27,31 @@ Vue.use(Spin)
 Vue.use(Button)
 Vue.use(Tag)
 /* eslint-disable no-new */
-let app = null
-const render = ({appContent, loading} = {}) => { // 渲染方法
-  if (!app) {
-    app = new Vue({
-      el: '#portal',
-      store,
-      router,
-      data() {
-        return {
-          content: appContent,
-          loading,
-        }
-      },
-      render(h) {
-        return h(App, {
-          props: {
-            content: this.content,
-            loading: this.loading,
-          }
-        })
-      }
-    })
-  } else {
-    app.content = appContent
-    app.loading = loading
-  }
-}
 const projects = [ // 子项目信息
   {
     name: 'aaa',
     entry: 'http://localhost:7771',
-    render,
+    container: '#contentView',
     activeRule: '/aaa',
   },
   {
     name: 'bbb',
     entry: 'http://localhost:7772',
-    render,
+    container: '#contentView',
     activeRule: '/bbb',
   },
 ]
+registerMicroApps(projects, { // 注册子项目
+  beforeLoad: () => store.commit('setLoading', true),
+  beforeMount: () => store.commit('setLoadContainer', true),
+  afterMount: () => store.commit('setLoading', false),
+  beforeUnmount: () => store.commit('setLoadContainer', false),
+})
 
-registerMicroApps(projects) // 注册子项目
-
-render()
+new Vue({
+  router,
+  store,
+  render: h => h(App)
+}).$mount('#portal')
 
 start({singular: false})
