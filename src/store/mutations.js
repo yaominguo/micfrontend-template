@@ -8,7 +8,7 @@ import {
 
 const homeName = 'home'
 export default {
-  setLoadContainer(state, value) {
+  setContent(state, value) {
     state.contentIsReady = value
   },
   setLoading(state, val) {
@@ -44,5 +44,8 @@ export default {
   },
   setBreadCrumb(state, route) {
     state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)
+  },
+  setInstanceCollection(state, data) {
+    state.instanceCollection = data
   },
 }

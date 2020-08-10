@@ -49,7 +49,7 @@ import SideMenu from './sidemenu'
 import TagsNav from './tags-nav'
 import BreadCrumb from './bread-crumb'
 import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
-import {routeEqual, getNewTagList, checkRouteChange, isInRoutes} from '@/libs/util'
+import {routeEqual, getNewTagList, checkRouteChange, isInRoutes, getNextRoute} from '@/libs/util'
 export default {
   name: 'Layout',
   components: {
@@ -59,31 +59,22 @@ export default {
   },
   computed: {
     ...mapState([
+      'routes',
       'contentIsReady',
       'webviewSrc',
       'tagNavList',
       'homeRoute',
+      'instanceCollection',
     ])
   },
   data() {
     return {
       zh_CN,
       collapsed: false,
-      curRoute: null,
     }
   },
   mounted() {
-    this.setTagNavList()
-    this.addTag({
-      route: this.homeRoute
-    })
-    this.setBreadCrumb(this.$route)
-    this.$global_state.onGlobalStateChange(state => {
-      const {route} = state
-      if (route && !route.destroy) {
-        this.curRoute = state.route
-      }
-    }, true)
+    this.init()
     window.addEventListener('beforeunload', () => checkRouteChange(this.$route, window.location)) // 刷新页面时候检查路由和真实地址是否有变化
   },
   beforeDestroy() {
@@ -94,7 +85,24 @@ export default {
       'addTag', // 添加标签
       'setTagNavList', // 设置标签列表
       'setBreadCrumb', // 设置面包屑列表
+      'setInstanceCollection', // 存储子项目beforeRouteEnter提交的销毁方法
     ]),
+    init() {
+      this.setTagNavList()
+      this.addTag({
+        route: this.homeRoute
+      })
+      this.setBreadCrumb(this.$route)
+      this.$global_state.onGlobalStateChange(state => {
+        // 监听子项目beforeRouteEnter时提交的组件销毁方法，并存入state
+        const {instanceInfo} = state
+        if (!instanceInfo) return
+        const {path} = instanceInfo
+        if (!path) return
+        this.setInstanceCollection({...this.instanceCollection, [path]: instanceInfo.destroyFn})
+        this.$global_state.setGlobalState({instanceInfo: null})
+      }, true)
+    },
     onUserSelect({key}) {
       this.$router.push({
         path: key,
@@ -115,18 +123,43 @@ export default {
       }
     },
     handleCloseTag(res, type, route) { // 关闭标签
-      this.$global_state.setGlobalState({destroy: true, route}) // 关闭标签则设置子项目unmount时销毁keep-alive状态
-      // setTimeout(() => this.$global_state.setGlobalState({destroy: false}), 1000)
-      /**
-       * 关闭触发中的标签页面则推回首页标签
-       * (原本的逻辑是关闭触发中的标签页面则触发相邻的标签页面，但是这样触发不了子项目的unmount)
-       */
-      if (routeEqual(this.$route, route)) {
-        // const nextRoute = getNextRoute(this.tagNavList, route)
-        // this.$router.push(nextRoute)
-        this.$router.replace({name: 'home'})
+      this.destroyTagPage(res, route) // 执行标签页面的的卸载
+      if (routeEqual(this.$route, route)) { // 关闭触发中的标签页面则推至相邻标签页
+        const nextRoute = getNextRoute(this.tagNavList, route)
+        this.$router.push(nextRoute)
       }
       this.setTagNavList(res)
+    },
+    destroyTagPage(tagNavs, {path, _jump}) {
+      const location = window.location.pathname + window.location.search
+      Object.keys(this.instanceCollection).forEach(key => {
+        if ((path && path.includes(key)) || (_jump && _jump.includes(key)) || location.includes(key)) {
+          const [node, destroyComponent, routerBase, destroyInstance] = this.instanceCollection[key] && this.instanceCollection[key]()
+          if (node && node.data.keepAlive) {
+            if (node.parent && node.parent.componentInstance && node.parent.componentInstance.cache) {
+              if (node.componentInstance) {
+                const nodeKey = node.key || (node.componentOptions.Ctor.cid + (node.componentOptions.tag ? `::${node.componentOptions.tag}` : ''))
+                const {cache, keys} = node.parent.componentInstance
+                if (cache[nodeKey]) {
+                  if (keys.length) {
+                    const index = keys.indexOf(nodeKey)
+                    if (index >= 0) {
+                      keys.splice(index, 1)
+                    }
+                  }
+                  delete cache[nodeKey]
+                }
+              }
+            }
+          }
+          destroyComponent() // 清除页面组件实例
+          delete this.instanceCollection[key]
+          if (tagNavs.every(tag => !tag.path.startsWith(routerBase))) {
+            // 如果标签中已没有该子项目的任何页面，则清除整个子项目的实例
+            destroyInstance()
+          }
+        }
+      })
     },
   },
   watch: {

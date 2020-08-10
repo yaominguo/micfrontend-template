@@ -77,10 +77,10 @@ export default {
             },
             children: [
               {
-                path: '/bbb/login',
-                name: 'bbb-login',
+                path: '/bbb/home',
+                name: 'bbb-home',
                 meta: {
-                  title: '登录'
+                  title: '首页'
                 }
               },
               {
@@ -88,13 +88,6 @@ export default {
                 name: 'bbb-register',
                 meta: {
                   title: '注册'
-                }
-              },
-              {
-                path: '/bbb/home',
-                name: 'bbb-home',
-                meta: {
-                  title: '页面'
                 }
               },
             ]

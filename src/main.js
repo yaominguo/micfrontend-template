@@ -15,7 +15,7 @@ Vue.config.productionTip = false
 Vue.prototype.$ajax = ajax
 Vue.prototype.$api = api
 Vue.prototype.$cookie = jscookie
-Vue.prototype.$global_state = initGlobalState({destroy: false, route: null}) // 初始化是否销毁子项目keep-alive标签
+Vue.prototype.$global_state = initGlobalState({instanceInfo: null})
 Vue.use(LocaleProvider)
 Vue.use(Layout)
 Vue.use(Menu)
@@ -43,9 +43,9 @@ const projects = [ // 子项目信息
 ]
 registerMicroApps(projects, { // 注册子项目
   beforeLoad: () => store.commit('setLoading', true),
-  beforeMount: () => store.commit('setLoadContainer', true),
+  beforeMount: () => store.commit('setContent', true),
   afterMount: () => store.commit('setLoading', false),
-  beforeUnmount: () => store.commit('setLoadContainer', false),
+  beforeUnmount: () => store.commit('setContent', false),
 })
 
 new Vue({
@@ -54,4 +54,4 @@ new Vue({
   render: h => h(App)
 }).$mount('#portal')
 
-start({singular: false})
+start()

@@ -9,4 +9,5 @@ export default {
   webviewSrc: null,
   tagNavList: [],
   breadCrumbList: [],
+  instanceCollection: {},
 }

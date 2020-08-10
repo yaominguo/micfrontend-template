@@ -110,7 +110,8 @@ export default {
 }
 .scroll-outer {
   position: absolute;
-  left: 28px;
+  /* left: 28px; */
+  left: 10px;
   right: 61px;
   top: 0;
   bottom: 0;
