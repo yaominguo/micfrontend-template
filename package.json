@@ -2,7 +2,7 @@
   "name": "micfrontend-template",
   "version": "1.0.0",
   "description": "微前端项目用模板",
-  "author": "yaominguo <missgmy@yahoo.com>",
+  "author": "GuoMingyao <missgmy@yahoo.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

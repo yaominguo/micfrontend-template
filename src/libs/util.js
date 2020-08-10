@@ -168,25 +168,17 @@ export const getTagNavListFromLocalstorage = () => {
 export const isInRoutes = (path) => {
   const {routes} = router.options
   const parentRoute = routes.find(item => item.name === 'Layout')
-  let result = false
+  const result = []
   const filter = (list) => {
-    for (let i = 0, len = list.length; i < len; i++) {
-      const route = list[i]
-      if (route.path === path) {
-        result = true
-        break
-      } else {
-        const {children} = route
-        if (children && children.length > 0) {
-          return filter(children)
-        } else {
-          continue
-        }
-      }
-    }
+    if (!list || list.length === 0) return
+    list.forEach(item => {
+      result.push(item.path)
+      const {children} = item
+      return filter(children)
+    })
   }
   filter(parentRoute.children)
-  return result
+  return result.indexOf(path) >= 0
 }
 
 /**

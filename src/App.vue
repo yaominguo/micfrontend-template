@@ -77,10 +77,10 @@ export default {
             },
             children: [
               {
-                path: '/bbb/home',
-                name: 'bbb-home',
+                path: '/bbb/bindPhone',
+                name: 'bbb-bindPhone',
                 meta: {
-                  title: '首页'
+                  title: '绑定手机'
                 }
               },
               {
