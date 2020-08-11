@@ -67,6 +67,83 @@ export default {
                   title: '列表页'
                 }
               },
+              {
+                path: '/aaa/table1',
+                name: 'aaa-table1',
+                meta: {
+                  title: '列表页1'
+                }
+              },
+              {
+                path: '/aaa/table2',
+                name: 'aaa-table2',
+                meta: {
+                  title: '列表页2'
+                }
+              },
+              {
+                path: '/aaa/table3',
+                name: 'aaa-table3',
+                meta: {
+                  title: '列表页3'
+                }
+              },
+              {
+                path: '/aaa/table4',
+                name: 'aaa-table4',
+                meta: {
+                  title: '列表页4'
+                }
+              },
+              {
+                path: '/aaa/table5',
+                name: 'aaa-table5',
+                meta: {
+                  title: '列表页5'
+                }
+              },
+              {
+                path: '/aaa/table6',
+                name: 'aaa-table6',
+                meta: {
+                  title: '列表页6'
+                }
+              },
+              {
+                path: '/aaa/table7',
+                name: 'aaa-table7',
+                meta: {
+                  title: '列表页7'
+                }
+              },
+              {
+                path: '/aaa/table8',
+                name: 'aaa-table8',
+                meta: {
+                  title: '列表页8'
+                }
+              },
+              {
+                path: '/aaa/table9',
+                name: 'aaa-table9',
+                meta: {
+                  title: '列表页9'
+                }
+              },
+              {
+                path: '/aaa/table10',
+                name: 'aaa-table10',
+                meta: {
+                  title: '列表页10'
+                }
+              },
+              {
+                path: '/aaa/table11',
+                name: 'aaa-table11',
+                meta: {
+                  title: '列表页11'
+                }
+              },
             ]
           },
           {
@@ -108,6 +185,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
   height: 100%;
+  overflow: hidden;
+}
+body {
   overflow: hidden;
 }
 </style>

@@ -1,5 +1,11 @@
 <template>
   <div class="tags-nav">
+    <div class="btn-con left-btn">
+      <a-button icon="left" size="small" @click="setScroll(240)"/>
+    </div>
+    <div class="btn-con right-btn">
+      <a-button icon="right" size="small" @click="setScroll(-240)"/>
+    </div>
     <div class="scroll-outer" ref="scrollOuter" @DOMMouseScroll="handleScroll" @mousewheel="handleScroll">
       <div class="scroll-body" ref="scrollBody" :style="{left: `${tagBodyLeft}px`}">
         <transition-group name="tagList-moving-animation">
@@ -38,8 +44,11 @@ export default {
   data() {
     return {
       tagBodyLeft: 0,
-      rightOffset: 40,
+      outerPadding: 4,
     }
+  },
+  mounted() {
+    setTimeout(() => this.getTagElementByName(this.$route), 200)
   },
   computed: {
     currentRouteObj() {
@@ -74,8 +83,6 @@ export default {
       }
     },
     handleClose(route) {
-      // const event = new Event('click')
-      // document.querySelector(`.tags-nav .ant-tag[name=${route.name}]`).dispatchEvent(event)
       const res = this.list.filter(item => !routeEqual(route, item))
       this.$emit('on-close', res, undefined, route)
     },
@@ -89,7 +96,39 @@ export default {
     showTitleInside(item) {
       return (item.meta && item.meta.title) || item.name
     },
+    getTagElementByName (route) {
+      this.$nextTick(() => {
+        const refsTag = this.$refs.tagsPageOpened
+        refsTag.forEach((item, index) => {
+          if (routeEqual(route, item.$attrs['data-route-item'])) {
+            let tag = refsTag[index].$el
+            this.moveToView(tag)
+          }
+        })
+      })
+    },
+    moveToView (tag) {
+      const outerWidth = this.$refs.scrollOuter.offsetWidth
+      const bodyWidth = this.$refs.scrollBody.offsetWidth
+      if (bodyWidth < outerWidth) {
+        this.tagBodyLeft = 0
+      } else if (tag.offsetLeft < -this.tagBodyLeft) {
+        // 标签在可视区域左侧
+        this.tagBodyLeft = -tag.offsetLeft + this.outerPadding
+      } else if (tag.offsetLeft > -this.tagBodyLeft && tag.offsetLeft + tag.offsetWidth < -this.tagBodyLeft + outerWidth) {
+        // 标签在可视区域
+        this.tagBodyLeft = Math.min(0, outerWidth - tag.offsetWidth - tag.offsetLeft - this.outerPadding)
+      } else {
+        // 标签在可视区域右侧
+        this.tagBodyLeft = -(tag.offsetLeft - (outerWidth - this.outerPadding - tag.offsetWidth))
+      }
+    },
   },
+  watch: {
+    $route(to) {
+      this.getTagElementByName(to)
+    },
+  }
 }
 </script>
 
@@ -110,8 +149,7 @@ export default {
 }
 .scroll-outer {
   position: absolute;
-  /* left: 28px; */
-  left: 10px;
+  left: 30px;
   right: 61px;
   top: 0;
   bottom: 0;
@@ -120,10 +158,31 @@ export default {
 .scroll-body {
   height: calc(100% - 1px);
   display: inline-block;
-  padding: 1px 4px 0;
+  padding: 0 4px;
   position: absolute;
   overflow: visible;
   white-space: nowrap;
   transition: left .3s ease;
+}
+.btn-con {
+  position: absolute;
+  top: 1px;
+  background: #fff;
+  z-index: 10;
+  height: calc(100% - 1px);
+}
+.btn-con button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  border: none;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+}
+.btn-con.left-btn {
+  left: 0;
+}
+.btn-con.right-btn{
+  right: 0
 }
 </style>
