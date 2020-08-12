@@ -123,17 +123,17 @@ export default {
       }
     },
     handleCloseTag(res, type, route) { // 关闭标签
-      this.destroyTagPage(res, route) // 执行标签页面的的卸载
-      if (routeEqual(this.$route, route)) { // 关闭触发中的标签页面则推至相邻标签页
-        const nextRoute = getNextRoute(this.tagNavList, route)
-        this.$router.push(nextRoute)
+      if (routeEqual(this.$route, route)) { // 关闭的标签是当前激活中的标签
+        this.destroyTagPage(res, route, window.location.pathname + window.location.search) // 执行标签页面的的卸载
+        this.turnToPage(getNextRoute(this.tagNavList, route)) // 关闭触发中的标签页面则推至相邻标签页
+      } else {
+        this.destroyTagPage(res, route, null) // 执行标签页面的的卸载
       }
       this.setTagNavList(res)
     },
-    destroyTagPage(tagNavs, {path, _jump}) {
-      const location = window.location.pathname + window.location.search
+    destroyTagPage(tagNavs, {path, _jump}, location) {
       Object.keys(this.instanceCollection).forEach(key => {
-        if ((path && path.includes(key)) || (_jump && _jump.includes(key)) || location.includes(key)) {
+        if ((path && path.includes(key)) || (_jump && _jump.includes(key)) || (location && location.includes(key))) {
           const [node, destroyComponent, routerBase, destroyInstance] = this.instanceCollection[key] && this.instanceCollection[key]()
           if (node && node.data.keepAlive) {
             if (node.parent && node.parent.componentInstance && node.parent.componentInstance.cache) {

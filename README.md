@@ -1,9 +1,18 @@
-# micfrontend-template
+# 微前端项目用模板
 
-## 微前端项目用模板
+---
+
+> ## 主项目需自行定义、设置的地方
+
+### 1. [main.js](/src/main.js)中的projects子项目信息（子项目生产地址和标识等）
+
+### 2. [App.vue](/src/App.vue)中的getRouteMenu获取侧边路由菜单的方法
+
+### 3. [/config/index.js](/config/index.js)中的build.assetsPublicPath设置为主项目的实际生产地址
 
 <i style="color:red"> 记得主项目需将/config/index.js中的build.assetsPublicPath修改为主项目的实际生产地址，否则生产环境下在子项目刷新页面会空白。</i>
 
+---
 
 > ## 子项目接入须知
 
@@ -29,7 +38,7 @@ new Router({
 })
 ```
 
-### 4. 在项目入口文件/src/main.js中引用[generate.js](./src/generate.js)，并暴露出3个生命周期函数：
+### 4. 在项目入口文件/src/main.js中引用[generate.js](/src/generate.js)，并暴露出3个生命周期函数：
 
 ```javascript
 // ... 上面的代码此处省略了，别删掉了 ...

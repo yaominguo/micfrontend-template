@@ -1,4 +1,6 @@
-/** Just For 微前端子项目 By Guo */
+/** Just For 微前端子项目 By Guo
+ * 目标是实现多实例切换的基础上尽量减少对子项目代码的侵入性修改
+*/
 
 import Vue from 'vue'
 import App from './App'
@@ -25,7 +27,7 @@ export default ({keepAlive = false, el = '#app'} = {}) => {
               destroyFn: () => {
                 const node = vm.$vnode,
                   destroy = vm.$destroy.bind(vm),
-                  base = router.options.base,
+                  {base} = router.options,
                   destroyInstance = () => {
                     if (instance) {
                       instance.$destroy.call(instance)
